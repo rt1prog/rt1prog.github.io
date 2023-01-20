@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bios on rt1prog.blog</title>
+    <link>https://rt1prog.github.io/tags/bios/</link>
+    <description>Recent content in bios on rt1prog.blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 13 Dec 2022 18:18:00 +0000</lastBuildDate><atom:link href="https://rt1prog.github.io/tags/bios/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Прямой старт Linux без загрузчика — EFIStub</title>
+      <link>https://rt1prog.github.io/posts/efistub/</link>
+      <pubDate>Tue, 13 Dec 2022 18:18:00 +0000</pubDate>
+      
+      <guid>https://rt1prog.github.io/posts/efistub/</guid>
+      <description>Настраиваем ядро работать в качестве EFI приложения и избавляемся от ненужной функциональности загрузчиков</description>
+      <content>&lt;p&gt;Ядро Linux имеет особенность запуска напрямую вместо загрузчика, в качестве EFI приложения. Для этого должны быть включены соответствующие параметры при сборке ядра. В archlinux репозитории ядро уже имеет такую функцию. Воспользуемся ее:&lt;/p&gt;
+&lt;p&gt;Установите утилиту для редактирования EFI ключей, если еще не установлена:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo pacman -S efibootmgr&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Подключаем EFI раздел в который следует скопировать наше ядро. У меня это NVME диск&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo mount /dev/nvme0n1p1 /mnt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo mkdir -p /mnt/EFI/archlinux
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo cp /boot/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;vmlinuz-linux,initramfs.img&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; /mnt/EFI/archlinux
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Настраиваем EFI записи:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;efibootmgr --create --disk /dev/nvme0n1 --part 1 --label &amp;quot;ArchLinux&amp;quot; --loader &#39;\EFI\archlinux\vmlinuz-linux&#39; --unicode &#39;root=PARTUUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX&#39; &lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Здесь мы создали EFI запись, в которой указали на копию ядра в качестве EFI-приложения и передали параметры UUID корневого раздела, а также начальный образ initramfs.&lt;/p&gt;
+&lt;p&gt;Для проверки порядка загрузки: &lt;code&gt;efibootmgr -u&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;art1gg@archlinux ~&amp;gt; efibootmgr -u
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;BootCurrent: &lt;span style=&#34;color:#ae81ff&#34;&gt;0001&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Timeout: &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; seconds
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;BootOrder: 0001,0002,0005,0006,0007,0000
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0000* Windows Boot Manager	VenHw&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;99e275e7-75a0-4b37-a2e6-c5385e6c00cb&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;䥗䑎坏S
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0001* ArchLinux	HD&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;1,GPT,1d12fc9b-e189-4e64-8ccd-ba0f842876ee,0x800,0x1dc800&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;/File&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\E&lt;/span&gt;FI&lt;span style=&#34;color:#ae81ff&#34;&gt;\a&lt;/span&gt;rchlinux&lt;span style=&#34;color:#ae81ff&#34;&gt;\v&lt;/span&gt;mlinuz-linux-lts&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;root&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;PARTUUID&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;a97fa2bc-1009-475e-97aa-c3d0697561dd resume&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;PARTUUID&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;cd2bae41-6699-477c-a440-1388a15cac53 rw initrd&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\E&lt;/span&gt;FI&lt;span style=&#34;color:#ae81ff&#34;&gt;\a&lt;/span&gt;rchlinux&lt;span style=&#34;color:#ae81ff&#34;&gt;\i&lt;/span&gt;nitramfs-linux-lts.img
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0002* AMD R5MP120G8	BBS&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HD,,0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0005* JetFlashTranscend 32GB 8.07	BBS&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HD,,0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0006* JetFlashTS32GJF500 0903	BBS&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HD,,0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0007* UEFI: JetFlashTS32GJF500 0903, Partition 1	PciRoot&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;/Pci&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0x14,0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;/USB&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;13,0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;/HD&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;1,GPT,f3f5bba9-78ca-4bd5-9a21-ab5fc38a91ef,0x800,0x1dcd000&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;art1gg@archlinux ~&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Выставляем нужный порядок:
+&lt;code&gt;efibootmgr -o 0001,0002,0003,0004&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Настраиваем pacman hook для автоматического обновления копии ядра:
+&lt;code&gt;cat /etc/pacman.d/hooks/efiKernelUpdate.hook&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;Trigger&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Install
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Upgrade
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Type &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Package
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Target &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; linux-lts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;Action&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Description &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Updating kernel duplicat on EFI partition
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Depends &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; linux-lts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;When &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PostTransaction
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Exec &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; /usr/bin/bash -c &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;mount /dev/nvme0n1p1 /mnt &amp;amp;&amp;amp; cp /boot/vmlinuz-linux-lts /boot/initramfs-linux-lts.img /mnt/EFI/archlinux/ &amp;amp;&amp;amp; umount /mnt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>linux on rt1prog.blog</title>
+    <link>https://rt1prog.github.io/tags/linux/</link>
+    <description>Recent content in linux on rt1prog.blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Jan 2023 21:14:11 +0000</lastBuildDate><atom:link href="https://rt1prog.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Установка ArchLinux</title>
+      <link>https://rt1prog.github.io/posts/arch_install/</link>
+      <pubDate>Fri, 20 Jan 2023 21:14:11 +0000</pubDate>
+      
+      <guid>https://rt1prog.github.io/posts/arch_install/</guid>
+      <description>Поэтапное руководство по установке дистрибутива ArchLinux</description>
+      <content>&lt;h2 id=&#34;подготовка-установочной-среды&#34;&gt;Подготовка установочной среды&lt;/h2&gt;
+&lt;h3 id=&#34;получение-свежего-образа-archlinux&#34;&gt;Получение свежего образа archlinux&lt;/h3&gt;
+&lt;p&gt;Перейдите на сайт &lt;a href=&#34;https://archlinux.org/download&#34;&gt;https://archlinux.org/download&lt;/a&gt;, выберете ближайшее зеркало и скачайте .iso образ&lt;/p&gt;
+&lt;p&gt;Либо с помощью http клиента:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;curl -O https://geo.mirror.pkgbuild.com/iso/latest/archlinux-x86_64.iso&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;создание-установочного-носителя&#34;&gt;Создание установочного носителя&lt;/h3&gt;
+&lt;p&gt;Далее создадим носитель с которого мы будем грузиться в среду установки. Используя команду dd, перенесите iso образ системы на вашу флэшку или портативный диск.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;dd if=&amp;lt;iso_image_path&amp;gt; of=/dev/&amp;lt;installation_device&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Также можно воспользоваться программами Rufus, WoeUSB, прямым назначением которых является создание таких носителей.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;подготовка-системы&#34;&gt;Подготовка системы&lt;/h2&gt;
+&lt;p&gt;Подготовка системы может выполняться как в домашней системе, так и в самой установочной среде, в которой собраны необходимые утилиты.&lt;/p&gt;
+&lt;p&gt;Выясните программное обеспечение вашей материнской платы. От этого зависит какой тип форматирования диска поддерживает ваша система.&lt;/p&gt;
+&lt;h3 id=&#34;форматирование-жесткого-диска&#34;&gt;Форматирование жесткого диска&lt;/h3&gt;
+&lt;p&gt;На современных UEFI прошивках, настоятельно рекомендуется использовать GPT формат. На устаревших BIOS системах, используйте MBR разметку.&lt;/p&gt;
+&lt;p&gt;Для операций с дисками можно воспользоваться такими программами как parted (gparted для GUI), gptdisk, cfdisk, gnome-disks&lt;/p&gt;
+&lt;p&gt;Запустите программу и отредактируйте нужные свойства
+Файлы носителя могут быть под именем sd, hd, nvme в зависимости от типа + порядковый номер устройства&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;parted /dev/sdX&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Желательно создать как минимум три раздела с точками монтирования:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;EFI загрузчика&lt;/li&gt;
+&lt;li&gt;подкачки&lt;/li&gt;
+&lt;li&gt;корня системы&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;В случае MBR таблиц, можно обойтись двумя, соответственно без EFI раздела&lt;/p&gt;
+&lt;p&gt;После форматирования диска, нужно отформатировать сами разделы в правильные файловые системы. Делается это с помощью команд набора mkfs&lt;/p&gt;
+&lt;p&gt;Для EFI разделов предпочтительной файловой системой является FAT32:
+&lt;code&gt;mkfs.fat -F 32 /dev/sda1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Для основной самой системы можно использовать такие фс как современную btrfs, проверенную ext4 или
+&lt;code&gt;mkfs.ext4 /dev/sda3&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;И раздел подкачки&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkswap /dev/sda2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;swapon /dev/sda2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;стабильное-интернет-соединение&#34;&gt;Стабильное интернет соединение&lt;/h3&gt;
+&lt;p&gt;В связи с тем что установочные пакеты передаются по сети, последнее но не маловажное условаие обеспечить себя хорошим интернет соедеинением.&lt;/p&gt;
+&lt;p&gt;Как правиило в образе уже запущены все необходимые утилиты для быстрой настройки проводных подключений.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;установка&#34;&gt;Установка&lt;/h2&gt;
+&lt;p&gt;Монтируем корневой раздел на который распакуем основные компоненты&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;mount /dev/sda3 /mnt&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Синхронизируем пакетный менеджер для получения свежих версией пакетов и базы данных&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;pacman -Syu&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Устанавливаем базовые пакеты, ядро, загрузчик и необходимые драйверы&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;pacstrap -i /mnt base linux grub linux-firmware&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Настраиваем нужный образ загрузчика grub
+При UEFI:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pacstrap -i /mnt efibootmgr
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mount --mkdir /dev/sdXN /mnt/boot/esp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;grub-install --target&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;x86_64-efi --efi-directory&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/mnt/boot/esp --boot-direcory&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/mnt/boot --bootloader-id&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ArchLinux
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;При BIOS:
+&lt;code&gt;grub-install --target=i386-pc /dev/sdX&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Когда все базовые пакеты и загрузчик распакуются, переходим в установленную систему для последующей конфигурации&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;arch-chroot /mnt&lt;/code&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;конфигурация&#34;&gt;Конфигурация&lt;/h2&gt;
+&lt;h3 id=&#34;пользователи&#34;&gt;Пользователи&lt;/h3&gt;
+&lt;p&gt;Задаем пароль для суперпользователя&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;passwd&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Добавляем нового пользователя и задаем ему пароль&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;useradd -m &amp;lt;username&amp;gt; -p &amp;lt;password&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&#34;локализация&#34;&gt;Локализация&lt;/h4&gt;
+&lt;p&gt;Используя всю мощь systemd утилит , меняем язык и время&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;localectl set-locale LANG&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ru_RU.UTF-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nano /etc/locale.genlocale-gen
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;timedatectl set-timezone Europe/Moscow
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Также можно включить синхронизацию времени по сети&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;timedatectl set-ntp 1&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;сеть&#34;&gt;Сеть&lt;/h3&gt;
+&lt;p&gt;Задаем параметры домена&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;hostnamectl set-hostname &amp;lt;hostname&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;И настраиваем DNS записи&amp;hellip; (Cloudflare и Google DNS)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;echo “1.1.1.1\n8.8.8.8” &amp;gt;&amp;gt; /etc/resolv.conf&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;загрузчик&#34;&gt;Загрузчик&lt;/h3&gt;
+&lt;p&gt;Создаем файл конфигурации загрузчика GRUB2 с помощью вспомогательной утилиты:
+&lt;code&gt;grub-mkconfig -o /boot/grub/grub.cfg&lt;/code&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;завершение&#34;&gt;Завершение&lt;/h2&gt;
+&lt;p&gt;Отмонтируем все точки
+&lt;code&gt;umount /mnt*&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Для проверки UEFI загрузки используйте
+&lt;code&gt;efibootmgr&lt;/code&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Обо Мне</title>
+      <link>https://rt1prog.github.io/me/</link>
+      <pubDate>Fri, 20 Jan 2023 21:14:11 +0300</pubDate>
+      
+      <guid>https://rt1prog.github.io/me/</guid>
+      <description>Поэтапное руководство по установке дистрибутива ArchLinux</description>
+      <content>&lt;h2 id=&#34;обо-мне&#34;&gt;Обо мне&lt;/h2&gt;
+&lt;h2 id=&#34;контакты&#34;&gt;Контакты&lt;/h2&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Прямой старт Linux без загрузчика — EFIStub</title>
+      <link>https://rt1prog.github.io/posts/efistub/</link>
+      <pubDate>Tue, 13 Dec 2022 18:18:00 +0000</pubDate>
+      
+      <guid>https://rt1prog.github.io/posts/efistub/</guid>
+      <description>Настраиваем ядро работать в качестве EFI приложения и избавляемся от ненужной функциональности загрузчиков</description>
+      <content>&lt;p&gt;Ядро Linux имеет особенность запуска напрямую вместо загрузчика, в качестве EFI приложения. Для этого должны быть включены соответствующие параметры при сборке ядра. В archlinux репозитории ядро уже имеет такую функцию. Воспользуемся ее:&lt;/p&gt;
+&lt;p&gt;Установите утилиту для редактирования EFI ключей, если еще не установлена:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo pacman -S efibootmgr&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Подключаем EFI раздел в который следует скопировать наше ядро. У меня это NVME диск&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo mount /dev/nvme0n1p1 /mnt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo mkdir -p /mnt/EFI/archlinux
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo cp /boot/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;vmlinuz-linux,initramfs.img&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; /mnt/EFI/archlinux
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Настраиваем EFI записи:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;efibootmgr --create --disk /dev/nvme0n1 --part 1 --label &amp;quot;ArchLinux&amp;quot; --loader &#39;\EFI\archlinux\vmlinuz-linux&#39; --unicode &#39;root=PARTUUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX&#39; &lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Здесь мы создали EFI запись, в которой указали на копию ядра в качестве EFI-приложения и передали параметры UUID корневого раздела, а также начальный образ initramfs.&lt;/p&gt;
+&lt;p&gt;Для проверки порядка загрузки: &lt;code&gt;efibootmgr -u&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;art1gg@archlinux ~&amp;gt; efibootmgr -u
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;BootCurrent: &lt;span style=&#34;color:#ae81ff&#34;&gt;0001&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Timeout: &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; seconds
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;BootOrder: 0001,0002,0005,0006,0007,0000
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0000* Windows Boot Manager	VenHw&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;99e275e7-75a0-4b37-a2e6-c5385e6c00cb&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;䥗䑎坏S
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0001* ArchLinux	HD&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;1,GPT,1d12fc9b-e189-4e64-8ccd-ba0f842876ee,0x800,0x1dc800&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;/File&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\E&lt;/span&gt;FI&lt;span style=&#34;color:#ae81ff&#34;&gt;\a&lt;/span&gt;rchlinux&lt;span style=&#34;color:#ae81ff&#34;&gt;\v&lt;/span&gt;mlinuz-linux-lts&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;root&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;PARTUUID&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;a97fa2bc-1009-475e-97aa-c3d0697561dd resume&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;PARTUUID&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;cd2bae41-6699-477c-a440-1388a15cac53 rw initrd&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\E&lt;/span&gt;FI&lt;span style=&#34;color:#ae81ff&#34;&gt;\a&lt;/span&gt;rchlinux&lt;span style=&#34;color:#ae81ff&#34;&gt;\i&lt;/span&gt;nitramfs-linux-lts.img
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0002* AMD R5MP120G8	BBS&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HD,,0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0005* JetFlashTranscend 32GB 8.07	BBS&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HD,,0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0006* JetFlashTS32GJF500 0903	BBS&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HD,,0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Boot0007* UEFI: JetFlashTS32GJF500 0903, Partition 1	PciRoot&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;/Pci&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0x14,0x0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;/USB&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;13,0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;/HD&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;1,GPT,f3f5bba9-78ca-4bd5-9a21-ab5fc38a91ef,0x800,0x1dcd000&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;art1gg@archlinux ~&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Выставляем нужный порядок:
+&lt;code&gt;efibootmgr -o 0001,0002,0003,0004&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Настраиваем pacman hook для автоматического обновления копии ядра:
+&lt;code&gt;cat /etc/pacman.d/hooks/efiKernelUpdate.hook&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;Trigger&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Install
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Upgrade
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Type &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Package
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Target &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; linux-lts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;Action&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Description &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Updating kernel duplicat on EFI partition
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Depends &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; linux-lts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;When &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PostTransaction
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Exec &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; /usr/bin/bash -c &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;mount /dev/nvme0n1p1 /mnt &amp;amp;&amp;amp; cp /boot/vmlinuz-linux-lts /boot/initramfs-linux-lts.img /mnt/EFI/archlinux/ &amp;amp;&amp;amp; umount /mnt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+    </item>
+    
+  </channel>
+</rss>
