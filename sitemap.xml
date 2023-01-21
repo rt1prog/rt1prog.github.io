@@ -2,33 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://rt1prog.github.io/tags/linux/</loc>
+    <loc>https://rt1prog.github.io/tags/linux.html</loc>
     <lastmod>2023-01-20T21:14:11+00:00</lastmod>
   </url><url>
-    <loc>https://rt1prog.github.io/tags/manual/</loc>
+    <loc>https://rt1prog.github.io/tags/manual.html</loc>
     <lastmod>2023-01-20T21:14:11+00:00</lastmod>
   </url><url>
-    <loc>https://rt1prog.github.io/posts/</loc>
+    <loc>https://rt1prog.github.io/posts.html</loc>
     <lastmod>2023-01-20T21:14:11+00:00</lastmod>
   </url><url>
     <loc>https://rt1prog.github.io/</loc>
     <lastmod>2023-01-20T21:14:11+00:00</lastmod>
   </url><url>
-    <loc>https://rt1prog.github.io/tags/</loc>
+    <loc>https://rt1prog.github.io/tags.html</loc>
     <lastmod>2023-01-20T21:14:11+00:00</lastmod>
   </url><url>
-    <loc>https://rt1prog.github.io/posts/arch_install/</loc>
+    <loc>https://rt1prog.github.io/posts/arch_install.html</loc>
     <lastmod>2023-01-20T21:14:11+00:00</lastmod>
   </url><url>
-    <loc>https://rt1prog.github.io/me/</loc>
+    <loc>https://rt1prog.github.io/me.html</loc>
     <lastmod>2023-01-20T21:14:11+03:00</lastmod>
   </url><url>
-    <loc>https://rt1prog.github.io/tags/bios/</loc>
+    <loc>https://rt1prog.github.io/tags/bios.html</loc>
     <lastmod>2022-12-13T18:18:00+00:00</lastmod>
   </url><url>
-    <loc>https://rt1prog.github.io/posts/efistub/</loc>
+    <loc>https://rt1prog.github.io/posts/efistub.html</loc>
     <lastmod>2022-12-13T18:18:00+00:00</lastmod>
   </url><url>
-    <loc>https://rt1prog.github.io/categories/</loc>
+    <loc>https://rt1prog.github.io/categories.html</loc>
   </url>
 </urlset>

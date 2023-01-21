@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>linux on rt1prog.blog</title>
-    <link>https://rt1prog.github.io/tags/linux/</link>
+    <link>https://rt1prog.github.io/tags/linux.html</link>
     <description>Recent content in linux on rt1prog.blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 20 Jan 2023 21:14:11 +0000</lastBuildDate><atom:link href="https://rt1prog.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Установка ArchLinux</title>
-      <link>https://rt1prog.github.io/posts/arch_install/</link>
+      <link>https://rt1prog.github.io/posts/arch_install.html</link>
       <pubDate>Fri, 20 Jan 2023 21:14:11 +0000</pubDate>
       
-      <guid>https://rt1prog.github.io/posts/arch_install/</guid>
+      <guid>https://rt1prog.github.io/posts/arch_install.html</guid>
       <description>Поэтапное руководство по установке дистрибутива ArchLinux</description>
       <content>&lt;h2 id=&#34;подготовка-установочной-среды&#34;&gt;Подготовка установочной среды&lt;/h2&gt;
 &lt;h3 id=&#34;получение-свежего-образа-archlinux&#34;&gt;Получение свежего образа archlinux&lt;/h3&gt;
@@ -102,22 +102,25 @@
     
     <item>
       <title>Обо Мне</title>
-      <link>https://rt1prog.github.io/me/</link>
+      <link>https://rt1prog.github.io/me.html</link>
       <pubDate>Fri, 20 Jan 2023 21:14:11 +0300</pubDate>
       
-      <guid>https://rt1prog.github.io/me/</guid>
+      <guid>https://rt1prog.github.io/me.html</guid>
       <description>Поэтапное руководство по установке дистрибутива ArchLinux</description>
-      <content>&lt;h2 id=&#34;обо-мне&#34;&gt;Обо мне&lt;/h2&gt;
-&lt;h2 id=&#34;контакты&#34;&gt;Контакты&lt;/h2&gt;
+      <content>&lt;h2 id=&#34;контакты&#34;&gt;Контакты&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Telegram: &lt;a href=&#34;https://t.me/rt1prog&#34;&gt;rt1prog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Vkontakte: &lt;a href=&#34;https://vk.com/id543889732&#34;&gt;id543889732&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </content>
     </item>
     
     <item>
       <title>Прямой старт Linux без загрузчика — EFIStub</title>
-      <link>https://rt1prog.github.io/posts/efistub/</link>
+      <link>https://rt1prog.github.io/posts/efistub.html</link>
       <pubDate>Tue, 13 Dec 2022 18:18:00 +0000</pubDate>
       
-      <guid>https://rt1prog.github.io/posts/efistub/</guid>
+      <guid>https://rt1prog.github.io/posts/efistub.html</guid>
       <description>Настраиваем ядро работать в качестве EFI приложения и избавляемся от ненужной функциональности загрузчиков</description>
       <content>&lt;p&gt;Ядро Linux имеет особенность запуска напрямую вместо загрузчика, в качестве EFI приложения. Для этого должны быть включены соответствующие параметры при сборке ядра. В archlinux репозитории ядро уже имеет такую функцию. Воспользуемся ее:&lt;/p&gt;
 &lt;p&gt;Установите утилиту для редактирования EFI ключей, если еще не установлена:&lt;/p&gt;
@@ -146,7 +149,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Выставляем нужный порядок:
 &lt;code&gt;efibootmgr -o 0001,0002,0003,0004&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Настраиваем pacman hook для автоматического обновления копии ядра:
-&lt;code&gt;cat /etc/pacman.d/hooks/efiKernelUpdate.hook&lt;/code&gt;&lt;/p&gt;
+&lt;code&gt;/etc/pacman.d/hooks/efiKernelUpdate.hook&lt;/code&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;Trigger&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Install
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Upgrade
@@ -154,10 +157,16 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Target &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; linux-lts
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;Action&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Description &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Mount EFI partition
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Depends &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; linux-lts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;When &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PreTransaction
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Exec &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; /usr/bin/mount /dev/nvme0n1p1 /mnt 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;Action&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Description &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Updating kernel duplicat on EFI partition
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Depends &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; linux-lts
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;When &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PostTransaction
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Exec &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; /usr/bin/bash -c &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;mount /dev/nvme0n1p1 /mnt &amp;amp;&amp;amp; cp /boot/vmlinuz-linux-lts /boot/initramfs-linux-lts.img /mnt/EFI/archlinux/ &amp;amp;&amp;amp; umount /mnt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Exec &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; /usr/bin/cp /boot/vmlinuz-linux-lts /boot/initramfs-linux-lts.img /mnt/EFI/archlinux/
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
     </item>
     
